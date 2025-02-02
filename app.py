@@ -4,13 +4,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
-
-
-
-
-# Dictionary to store the latest output from each client
-client_data = {}
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')  # Use gevent
 
 @app.route('/')
 def index():
@@ -20,7 +14,6 @@ def index():
 def handle_client_data(data):
     client_id = data['client_id']
     output = data['output']
-    client_data[client_id] = output
     print(f"Received data from Client {client_id}: {output}")
     emit('update_data', {'client_id': client_id, 'output': output}, broadcast=True)
 
